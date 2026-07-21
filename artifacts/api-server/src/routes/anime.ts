@@ -262,15 +262,19 @@ router.get("/anime/embed", async (req, res): Promise<void> => {
   }
   const { malId, ep = 1, dubbed = false } = params.data;
   const dubSuffix = dubbed ? "/dub" : "";
-  const primary = `https://vidsrc.pro/embed/anime/${malId}/${ep}${dubSuffix}`;
-  const alt2 = `https://vidsrc.to/embed/anime/${malId}/${ep}`;
+
+  const sources = [
+    { label: "Server 1 (VidSrc)", url: `https://vidsrc.to/embed/anime/${malId}/${ep}${dubSuffix}` },
+    { label: "Server 2 (VidSrc Pro)", url: `https://vidsrc.pro/embed/anime/${malId}/${ep}${dubSuffix}` },
+    { label: "Server 3 (2Anime)", url: `https://2anime.xyz/embed/${malId}/${ep}` },
+    { label: "Server 4 (VidSrc Me)", url: `https://vidsrc.me/embed/anime?mal=${malId}&e=${ep}` },
+    { label: "Server 5 (AniWatch)", url: `https://aniwatchtv.to/embed-2?mal=${malId}&ep=${ep}` },
+  ];
+
   res.json(
     GetAnimeEmbedResponse.parse({
-      embedUrl: primary,
-      sources: [
-        { label: dubbed ? "Dubbed" : "Subbed", url: primary },
-        { label: "Mirror", url: alt2 },
-      ],
+      embedUrl: sources[0].url,
+      sources,
     }),
   );
 });

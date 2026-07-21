@@ -308,15 +308,17 @@ router.get("/movies/:id/embed", async (req, res): Promise<void> => {
   }
   const { id } = parsed.data;
 
-  const primary = `https://vidsrc.to/embed/movie/${id}`;
-  const alt = `https://www.2embed.cc/embed/${id}`;
+  const sources = [
+    { label: "Server 1 (VidSrc)", url: `https://vidsrc.to/embed/movie/${id}` },
+    { label: "Server 2 (VidSrc Pro)", url: `https://vidsrc.pro/embed/movie/${id}` },
+    { label: "Server 3 (VidSrc Me)", url: `https://vidsrc.me/embed/movie?tmdb=${id}` },
+    { label: "Server 4 (2Embed)", url: `https://www.2embed.cc/embed/${id}` },
+    { label: "Server 5 (MultiEmbed)", url: `https://multiembed.mov/?video_id=${id}&tmdb=1` },
+  ];
   res.json(
     GetMovieEmbedResponse.parse({
-      embedUrl: primary,
-      sources: [
-        { label: "vidsrc", url: primary },
-        { label: "2embed", url: alt },
-      ],
+      embedUrl: sources[0].url,
+      sources,
     }),
   );
 });
